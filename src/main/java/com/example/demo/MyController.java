@@ -19,8 +19,19 @@ public class MyController {
         return "Greetings from Spring Boot!";
     }
 
+    private boolean isValidUrl(String url) {
+        // Add your URL validation logic here
+        // For example, use a regex to match a valid URL pattern
+        String urlPattern = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1|jdbc:mysql://localhost:3306/yourdb";
+        return url.matches(urlPattern);
+    }
+
     @GetMapping("/connect")
     public String connect(@RequestParam("url") String url) {
+        if (!isValidUrl(url)) {
+            return "Invalid URL";
+        }
+
         Sql2o sql2o = new Sql2o(url);
 
         try (var con = sql2o.open()) {
